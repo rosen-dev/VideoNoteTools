@@ -72,7 +72,8 @@ def find_clip_by_marker_name(target_url):
                             print(f"       片段名称: {item.GetName()}")
                             print(f"       Marker 标题: {name}")
                             found_clip = item
-                            target_start_frame = item.GetStart()
+                            # 换算公式：片段在时间线的起始帧 + (Marker的源素材帧 - 片段在源素材的起始帧)
+                            target_start_frame = item.GetStart() + (frameId - item.GetLeftOffset())
                             target_timeline = tl
                             break
                 if found_clip: break
