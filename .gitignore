@@ -34,5 +34,9 @@ env/
 # VS Code
 .vscode/
 
+# Application Logs
+run_log.txt
+run_log.txt*
+
 # Local config (optional)
 # config.json
