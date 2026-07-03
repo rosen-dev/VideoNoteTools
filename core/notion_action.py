@@ -47,6 +47,8 @@ def notion_to_resolve():
     if success:
         print("[动作] API 定位成功，强制唤醒达芬奇窗口。")
         activate_window("DaVinci Resolve")
+        pyperclip.copy("")
+        print("[动作] 清理残余：已清空系统剪贴板中的 Notion 链接。")
         print("[完成] 跨界跃迁完成！")
     else:
         print("[完成] API 定位失败，流程中止。")

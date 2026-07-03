@@ -63,7 +63,14 @@ def resolve_to_notion():
         print(f"[动作] 调用系统打开原生协议: {notion_app_url}")
         webbrowser.open(notion_app_url)
         print("[完成] 唤醒 Notion 客户端指令发送完毕。")
-        pyperclip.copy(original_clipboard)
+        
+        # 恢复剪贴板时，如果原剪贴板里是 Notion 链接，则顺手清空它
+        if is_notion_url(original_clipboard):
+            pyperclip.copy("")
+            print("[动作] 清理残余：已清空系统剪贴板中的 Notion 链接。")
+        else:
+            pyperclip.copy(original_clipboard)
+            
     else:
         # 分支 B：绑定或报错
         print("[判断] 提取失败，未检测到 Notion 链接。准备检查是否需要绑定新链接...")
@@ -76,6 +83,8 @@ def resolve_to_notion():
             # 呼叫底层服务：执行绑定写入
             bind_url_via_marker_panel()
             
+            pyperclip.copy("")
+            print("[动作] 清理残余：已清空系统剪贴板中的 Notion 链接。")
             print("[完成] 自动打标绑定完毕！")
         else:
             print("[判断] 原始剪贴板中也没有 Notion 链接。流程中止。")
