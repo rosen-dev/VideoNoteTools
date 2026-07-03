@@ -66,7 +66,7 @@ def find_clip_by_marker_name(target_url):
                     for frameId, marker_info in markers.items():
                         name = marker_info.get('name', '')
                         if target_url in name:
-                            print(f"[API命中] 🎯 找到匹配的 Marker！")
+                            print(f"[API命中] 找到匹配的 Marker！")
                             print(f"       时间线: {tl.GetName()}")
                             print(f"       轨道: V{v_index}")
                             print(f"       片段名称: {item.GetName()}")

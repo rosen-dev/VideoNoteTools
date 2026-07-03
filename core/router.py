@@ -27,7 +27,7 @@ def on_hotkey_triggered():
         elif "notion.exe" in process_name:
             notion_to_resolve()
         else:
-            print(f"\n[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] 🚫 防误触机制拦截：忽略操作 (当前程序: {process_name})")
+            print(f"\n[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] [拦截] 防误触机制生效：忽略操作 (当前程序: {process_name})")
             
     except Exception as e:
         print(f"\n[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] [致命错误] 快捷键执行失败: {e}")
