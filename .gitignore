@@ -1,4 +1,38 @@
-__pycache__/davinci_api.cpython-313.pyc
-__pycache__/notion_action.cpython-313.pyc
-__pycache__/resolve_action.cpython-313.pyc
-__pycache__/utils.cpython-313.pyc
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+.env
+
+# VS Code
+.vscode/
+
+# Local config (optional)
+# config.json
