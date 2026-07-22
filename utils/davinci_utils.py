@@ -1,15 +1,11 @@
 import os
 import sys
-import tkinter as tk
-from tkinter import messagebox
+from utils.common import show_toast
 
 def show_error(title, msg):
     print(f"[报错弹窗] {title}: {msg}")
-    root = tk.Tk()
-    root.withdraw()
-    root.attributes('-topmost', True)
-    messagebox.showwarning(title, msg)
-    root.destroy()
+    show_toast(msg, title=title, level="error")
+
 
 def get_resolve():
     print("[API] 尝试连接 DaVinci Resolve Scripting 环境...")

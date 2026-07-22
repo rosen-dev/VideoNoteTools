@@ -36,7 +36,7 @@ def notion_to_resolve():
     # 2. 逻辑验证
     if not is_notion_url(target_url):
         print("[错误] 获取到的内容不是合法的 Notion 链接，停止流转。")
-        show_toast("抓取失败！\n您当前选中的可能不是一个合法的 Notion Block，或者 Notion 没有响应。")
+        show_toast("您当前选中的可能不是一个合法的 Notion Block，或者 Notion 没有响应。", title="抓取失败", level="warning")
         return
         
     # 3. 呼叫外部服务 (达芬奇 API)
@@ -52,4 +52,5 @@ def notion_to_resolve():
         print("[完成] 跨界跃迁完成！")
     else:
         print("[完成] API 定位失败，流程中止。")
-        show_toast("未找到片段！\n\n在达芬奇的当前项目中，没有任何片段的标记标题包含了该 Notion 链接。")
+        show_toast("在达芬奇的当前项目中，没有任何片段的标记标题包含了该 Notion 链接。", title="未找到匹配片段", level="warning")
+

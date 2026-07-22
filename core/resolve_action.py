@@ -88,5 +88,6 @@ def resolve_to_notion():
             print("[完成] 自动打标绑定完毕！")
         else:
             print("[判断] 原始剪贴板中也没有 Notion 链接。流程中止。")
-            show_toast("绑定失败：您忘记复制地址了！\n\n请先去 Notion 里复制 Block 链接，然后再回到这里按快捷键进行绑定。")
+            show_toast("请先去 Notion 里复制 Block 链接，然后再回到这里按快捷键进行绑定。", title="绑定失败：忘记复制地址", level="warning")
             pyperclip.copy(original_clipboard)
+
