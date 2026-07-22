@@ -4,6 +4,7 @@ import os
 import threading
 import keyboard
 from core.router import on_hotkey_triggered
+from utils.logger import log_info
 
 CONFIG_FILE = "config.json"
 
@@ -27,7 +28,7 @@ def start_background_listener(hotkey):
 
 
 # ==========================================
-# 界面展示：单纯负责画 UI，没有任何业务逻辑
+# 界面展示：单纯负责画 UI
 # ==========================================
 class App:
     def __init__(self, root, hotkey):
@@ -45,17 +46,17 @@ if __name__ == "__main__":
     # 1. 独立获取配置
     current_hotkey = load_config()
     
-    # 2. 打印日志
-    print("="*60)
-    print("  DaVinci <-> Notion 双向控制中心 (深度调试版) 已启动")
-    print("="*60)
-    print(f"[系统] 正在监听全局快捷键: {current_hotkey}")
-    print("[系统] 仅放行 resolve.exe 和 notion.exe，等待触发中...\n")
+    # 2. 记录启动日志
+    log_info("="*60)
+    log_info("  DaVinci <-> Notion 双向控制中心 已启动")
+    log_info("="*60)
+    log_info(f"[系统] 正在监听全局快捷键: {current_hotkey}")
+    log_info("[系统] 仅放行 resolve.exe 和 notion.exe，等待触发中...\n")
     
     # 3. 剥离后台监听逻辑，扔进独立线程，与 UI 彻底解耦
     threading.Thread(target=start_background_listener, args=(current_hotkey,), daemon=True).start()
     
-    # 4. 最后画纯粹的 UI 界面，它什么都不干，只是个“花瓶”
+    # 4. 最后画纯粹的 UI 界面
     root = tk.Tk()
     app = App(root, current_hotkey)
     root.mainloop()

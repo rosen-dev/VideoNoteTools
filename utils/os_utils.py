@@ -2,6 +2,7 @@ import win32gui
 import win32process
 import psutil
 import pygetwindow as gw
+from utils.logger import log_error
 
 def get_active_process_name():
     """向 Windows 底层查询当前最前面的活动窗口对应的进程名称"""
@@ -23,5 +24,5 @@ def activate_window(title_keyword):
             win.activate()
             return True
     except Exception as e:
-        print(f"窗口唤醒失败: {e}")
+        log_error(f"窗口唤醒失败: {e}")
     return False

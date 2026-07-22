@@ -1,10 +1,10 @@
-import datetime
 import keyboard
 import time
 from utils.os_utils import get_active_process_name
 from core.resolve_action import resolve_to_notion
 from core.notion_action import notion_to_resolve
 from config import DELAY_ROUTER_MODIFIER_RELEASE
+from utils.logger import log_info, log_error
 
 def on_hotkey_triggered():
     """
@@ -19,15 +19,16 @@ def on_hotkey_triggered():
         time.sleep(DELAY_ROUTER_MODIFIER_RELEASE)
         
         process_name = get_active_process_name()
-        print(f"\n[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] ========================================")
-        print(f"[路由监控] 捕获快捷键触发！当前最顶层激活进程: '{process_name}'")
+        log_info(f"========================================")
+        log_info(f"[路由监控] 捕获快捷键触发！当前最顶层激活进程: '{process_name}'")
         
         if "resolve.exe" in process_name:
             resolve_to_notion()
         elif "notion.exe" in process_name:
             notion_to_resolve()
         else:
-            print(f"\n[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] [拦截] 防误触机制生效：忽略操作 (当前程序: {process_name})")
+            log_info(f"[拦截] 防误触机制生效：忽略操作 (当前程序: {process_name})")
             
     except Exception as e:
-        print(f"\n[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] [致命错误] 快捷键执行失败: {e}")
+        log_error(f"[致命错误] 快捷键执行失败: {e}")
+
