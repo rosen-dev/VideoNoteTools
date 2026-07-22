@@ -16,9 +16,10 @@ def setup_logger():
         return logger
 
     formatter = logging.Formatter(
-        "[%(asctime)s.%(msec)03d] [%(levelname)s] %(message)s",
+        "[%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s",
         datefmt="%H:%M:%S"
     )
+
 
     # 1. 控制台 Handler
     try:
