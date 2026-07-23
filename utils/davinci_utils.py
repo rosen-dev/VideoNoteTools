@@ -1,6 +1,9 @@
 import os
 import sys
+import time
 from utils.common import show_toast
+from utils.logger import log_info, log_error
+
 
 def show_error(title, msg):
     print(f"[报错弹窗] {title}: {msg}")
@@ -81,23 +84,53 @@ def find_clip_by_marker_name(target_url):
         return False
         
     current_tl = project.GetCurrentTimeline()
-    if current_tl.GetUniqueId() != target_timeline.GetUniqueId():
-        print(f"[API] 发现目标不在当前时间线，执行切线: '{current_tl.GetName()}' -> '{target_timeline.GetName()}'")
+    target_id = target_timeline.GetUniqueId()
+
+    if current_tl and current_tl.GetUniqueId() != target_id:
+        log_info(f"[API] 发现目标不在当前时间线，执行切线: '{current_tl.GetName()}' -> '{target_timeline.GetName()}'")
         project.SetCurrentTimeline(target_timeline)
+
+        # 核心改进：主动轮询校验 API，确保达芬奇完成时间线加载后再进行 SetCurrentTimecode
+        retry_count = 0
+        while retry_count < 20:
+            active_tl = project.GetCurrentTimeline()
+            if active_tl and active_tl.GetUniqueId() == target_id:
+                log_info(f"[API] 确认时间线已真实切入并就绪！耗时约: {retry_count * 10}ms")
+                break
+            time.sleep(0.01)
+            retry_count += 1
     else:
-        print("[API] 目标就在当前时间线，无需切换。")
-        
-    fps_setting = float(target_timeline.GetSetting('timelineFrameRate'))
-    fps_int = int(round(fps_setting)) 
+        log_info("[API] 目标就在当前时间线，无需切换。")
+
+    # 在已确认就绪的时间线上执行 SetCurrentTimecode
+    active_tl = project.GetCurrentTimeline() or target_timeline
+
+    fps_setting = float(active_tl.GetSetting('timelineFrameRate'))
+    fps_int = int(round(fps_setting))
     h = int(target_start_frame / (fps_int * 3600))
     m = int((target_start_frame / (fps_int * 60)) % 60)
     s = int((target_start_frame / fps_int) % 60)
     f = int(target_start_frame % fps_int)
     timecode_str = f"{h:02d}:{m:02d}:{s:02d}:{f:02d}"
-    
-    print(f"[API] 帧率参数: {fps_setting}, 目标起始绝对帧: {target_start_frame}")
-    print(f"[API] 换算时间码为: {timecode_str}")
-    print("[API] 执行播放头跳转指令。")
-    target_timeline.SetCurrentTimecode(timecode_str)
-    
+
+    log_info(f"[API] 帧率参数: {fps_setting}, 目标起始绝对帧: {target_start_frame}")
+    log_info(f"[API] 换算时间码为: {timecode_str}")
+    log_info("[API] 执行播放头跳转指令。")
+    active_tl.SetCurrentTimecode(timecode_str)
+
+    # 双重兜底：主动校验播放头是否已真实飞跃至目标 timecode
+    tc_retry = 0
+    while tc_retry < 15:
+        actual_tc = active_tl.GetCurrentTimecode()
+        if actual_tc == timecode_str:
+            log_info(f"[API] 确认播放头已精准跳转至目标时间码: {timecode_str} (校验耗时约: {tc_retry * 10}ms)")
+            break
+        time.sleep(0.01)
+        active_tl.SetCurrentTimecode(timecode_str)
+        tc_retry += 1
+    else:
+        log_info(f"[API] 提示：播放头跳转完成，当前实际时间码为: {active_tl.GetCurrentTimecode()}")
+
     return True
+
+
